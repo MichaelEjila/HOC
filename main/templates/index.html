@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+{% load static %}
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+  <link rel="apple-touch-icon" sizes="76x76" href="img/apple-icon.png">
+  <link rel="icon" type="image/png" href="img/nuslog.png">
+  <title>
+    EUNUESA
+  </title>
+  <!--     Fonts and icons     -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+
+ <!-- Nucleo Icons -->
+ <link href="{% static "css/nucleo-icons.css" %}" rel="stylesheet" />
+ <link href="{% static "css/nucleo-svg.css" %}" rel="stylesheet" />
+
+ <!-- Font Awesome Icons -->
+ <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+
+ <!-- CSS Files -->
+ <link id="pagestyle" href="{% static "css/soft-ui-dashboard.css" %}" rel="stylesheet" />
+
+  <!-- Nepcha Analytics (nepcha.com) -->
+  <script defer data-site="DOMAIN_NAME" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+</head>
+
+<body class="g-sidenav-show  bg-gray-100 virtual-reality">
+  <div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
+      navbar-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">EU-NUESA</a></li>
+          </ol>
+          <h6 class="font-weight-bolder mb-0">Dashboard</h6>
+        </nav>
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+            <!-- <div class="input-group">
+              <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" placeholder="Type here...">
+            </div> -->
+          </div>
+          <ul class="navbar-nav  justify-content-end">
+            <li class="nav-item d-flex align-items-center">
+              <a class="btn btn-outline-primary btn-sm mb-0 me-3" href="{% url 'index_view' %}">T r i v i a</a>
+            </li>
+
+
+            <li class="nav-item dropdown pe-2 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <i class="fa fa-bell cursor-pointer"></i>
+              </a>
+              <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+
+                <!--VATO!!!!    Return the Notifications here via lists i.e <li> -->
+
+                <li>
+                  <a class="dropdown-item border-radius-md" href="javascript:;">
+                    <div class="d-flex py-1">
+                      <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
+                        <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1"
+                          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                          <title>credit-card</title>
+                          <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                              <g transform="translate(1716.000000, 291.000000)">
+                                <g transform="translate(453.000000, 454.000000)">
+                                  <path class="color-background"
+                                    d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z"
+                                    opacity="0.593633743"></path>
+                                  <path class="color-background"
+                                    d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z">
+                                  </path>
+                                </g>
+                              </g>
+                            </g>
+                          </g>
+                        </svg>
+                      </div>
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="text-sm font-weight-normal mb-1">
+                          Account Credited with 10000 points
+                        </h6>
+                        <p class="text-xs text-secondary mb-0 ">
+                          <i class="fa fa-clock me-1"></i>
+                          just now
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+
+                <!--Notifications ends here-->
+
+
+
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+  </div>
+  <div class="border-radius-xl mt-3 mx-3 position-relative"
+    style="background-image: url('{% static 'img/bty.jpg' %}') ; background-size:;">
+
+    <script title="Find Date">
+      function getDateTime() {
+        // Create a new Date object
+        const today = new Date();
+        const hour = today.getHours();
+        const minute = today.getMinutes();
+        const day = today.getDay();
+        const formattedDateTime = `${hour}:${minute}`;
+        const todays = day;
+        return formattedDateTime;
+      }
+    </script>
+
+    <main class="main-content mt-1 border-radius-lg">
+      <div class="section min-vh-85 position-relative transform-scale-0 transform-scale-md-7">
+        <div class="container">
+          <br><br />
+          <div class="col-lg-8 col-md-11">
+            <div class="d-flex">
+              <div class="me-auto">
+                <div id="dateTime"></div>
+                <h1 class="display-1 font-weight-bold mt-n4 mb-0 dr1">
+                  <script>document.write(getDateTime());</script>
+                </h1>
+                <h6 class="text-uppercase mb-0 ms-1 dr1">
+                  <script title="Find DAy">
+                    function getD() {
+                      const today = new Date();
+                      const day = today.getDay();
+                      switch (day) {
+                        case 0:
+                          return "Sunday";
+                        case 1:
+                          return "Monday";
+                        case 2:
+                          return "Tuesday";
+                        case 3:
+                          return "Wednesday";
+                        case 4:
+                          return "Thursday";
+                        case 5:
+                          return "Friday";
+                        case 6:
+                          return "Saturday";
+                      }
+                      return day;
+                    }
+                    document.write(getD());
+
+                  </script>
+                </h6>
+              </div>
+              <div class="ms-auto">
+                <marquee width="auto" scrollamount="4" loop="">
+                  <img class="w-50 float-end mt-lg-n4" src="{% static "img/small-logos/icon-sun-cloud.png" %}"
+                    alt="image sun">
+                </marquee>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 mt-4 mt-sm-0">
+
+              <div class="card move-on-hover mt-4">
+                <div class="card-body">
+                  <div class="d-flex">
+
+                    <!-- VATO!!!!   Return the Users FirstNAme HEre-->
+                    <p class="my-auto">Welcome {{first_name}}!!</p>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="col-xl-6 mb-xl-0 mb-4">
+              <div class="card bg-transparent shadow-xl">
+                <div class="overflow-hidden position-relative border-radius-xl"
+                  style="background-image: url('{% static 'img/bg000.jpg' %}');">
+                  <span class="mask bg-gradient-dark"></span>
+                  <div class="card-body position-relative z-index-1 p-3">
+                    <i class="fas fa-wifi text-white p-2"></i>
+                    <h5 class="text-white mt-4 mb-5 pb-2">
+                      <!-- VATO!!!!   Return the User MatricNO/VENDOR ID HEre-->
+                      <!-- Kindly recognize the sequence-->
+                      {{ matric_number|slice:":3" }}&nbsp;&nbsp;&nbsp;
+                      {{ matric_number|slice:"3:6" }}&nbsp;&nbsp;&nbsp;
+                      {{ matric_number|slice:"6:9" }}&nbsp;&nbsp;&nbsp;
+                      {{ matric_number|slice:"9:" }}
+                    </h5>
+                    <div class="d-flex">
+                      <div class="d-flex">
+                        <div class="me-4">
+                          <p class="text-white text-sm opacity-8 mb-0">Card Holder</p>
+                          <!-- VATO!!!!   Return the Users FullNAme HEre-->
+                          <h6 class="text-white mb-0">{{first_name}}, {{last_name}}</h6>
+                        </div>
+                        <div>
+                          <p class="text-white text-sm opacity-8 mb-0">Card Type</p>
+                          <!-- VATO!!!!   Return the card type HEre-->
+                          <h6 class="text-white mb-0">{{card_type}}</h6>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card move-on-hover mt-2">
+              <div class="card-body">
+                <div class="d-flex">
+                  <p class="mb-0">Open Tickets </p>
+                  <a href="javascript:;" class="ms-auto" data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Open Tickets">
+                    <!-- VATO!!!!   Return the no of Open Yickes a User Has HEre-->
+                    ({{open_tickets_count}})
+                  </a>
+                </div>
+                <br>
+                <a class="btn btn-outline-dark w-100" href="account.html">Enter Account</a>
+
+
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-lg-4 col-md-4">
+                <div class="card move-on-hover overflow-hidden">
+                  <div class="card-body">
+                    <div class="d-flex">
+                      <h6 class="mb-0 me-6">Tue</h6>
+                      <h6 class="mb-0">Tech Talk Show<br>
+                        <small class="text-secondary font-weight-normal">PFA</small>
+                      </h6>
+                    </div>
+                    <hr class="horizontal dark">
+                    <div class="d-flex">
+                      <h6 class="mb-0 me-6">Wed</h6>
+                      <h6 class="mb-0">Skill Day<br />
+                        <small class="text-secondary font-weight-normal">Engineering Faculty</small>
+                      </h6>
+                    </div>
+
+
+                  </div>
+                  <a href="trivia.html#seco" class="bg-gray-100 w-100 text-center py-1" data-bs-toggle="tooltip"
+                    data-bs-placement="top" title="Show More">
+                    <i class="fas fa-chevron-down text-primary"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 mt-4 mt-sm-0">
+
+              <div class="card move-on-hover mt-4">
+                <div class="card-body">
+                  <small class="my-auto pcn">Catch your cruise well!!!</small>
+                  <div class="d-flex">
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="footer pt-3  ">
+    <div class="container-fluid">
+      <div class="row align-items-center justify-content-lg-between">
+        <div class="col-lg-6 mb-lg-0 mb-4">
+          <div class="copyright text-center text-sm text-muted text-lg-start">
+            ©
+            <script>
+              document.write(new Date().getFullYear())
+            </script> | Armtechnologies
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+
+  <!--   Core JS Files   -->
+  <script src="{% static "js/core/popper.min.js"%}"></script>
+  <script src="{% static "js/core/bootstrap.min.js"%}"></script>
+  <script src="{% static "js/plugins/perfect-scrollbar.min.js"%}"></script>
+  <script src="{% static "js/plugins/smooth-scrollbar.min.js"%}"></script>
+  <script>
+    var win = navigator.platform.indexOf("Win") > -1;
+    if (win && document.querySelector("#sidenav-scrollbar")) {
+      var options = {
+        damping: "0.5"
+      }
+      Scrollbar.init(document.querySelector("#sidenav-scrollbar"), options);
+    }
+  </script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <script src="{% static "js/soft-ui-dashboard.min.js" %}"></script>
+</body>
+
+</html>
