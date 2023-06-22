@@ -8,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from main.models_.task_models import Task, Tasker
 from main.utils.services import credit_finance
 
+
 class TaskService:
 
     def generate_task_reference(name):
@@ -23,42 +24,44 @@ class TaskService:
         task_reference = hashlib.md5(reference.encode()).hexdigest()
 
         return task_reference
-    
 
     def get_completed_taskers(task_reference, user_reference):
-        #Returns a list of users that have completed
+        # Returns a list of users that have completed
         try:
             user = User.objects.get(reference=user_reference)
         except ObjectDoesNotExist:
             return {"success": False, "message": "user does not exist."}
-        
-        task_exists = Task.objects.filter(reference = task_reference).exists()
+
+        task_exists = Task.objects.filter(reference=task_reference).exists()
 
         if task_exists:
-            task = Task.objects.get(reference = task_reference)
-            completed_taskers = Tasker.objects.filter(user=user, task = task)
-            tasker_list = [tasker.user.reference for tasker in completed_taskers]
-            
+            task = Task.objects.get(reference=task_reference)
+            completed_taskers = Tasker.objects.filter(user=user, task=task)
+            tasker_list = [
+                tasker.user.reference for tasker in completed_taskers]
+
             if len(tasker_list) < 1:
                 return None
             return tasker_list
-    
 
     def complete_task(task_reference, user_reference):
         try:
             user = User.objects.get(reference=user_reference)
         except ObjectDoesNotExist:
             return {"success": False, "message": "user does not exist."}
-        
+
         message = {"success": True, "message": "Successfully completed task."}
         task_exists = Task.objects.filter(reference=task_reference).exists()
-        tasker_exists = Tasker.objects.filter(reference=task_reference, user=user).exists()
 
         if task_exists:
             task = Task.objects.get(reference=task_reference)
+            tasker_exists = Tasker.objects.filter(
+                user=user, task=task).exists()
+
             if task.expires_at > timezone.now():
                 if tasker_exists:
-                    tasker = Tasker.objects.get(reference=task_reference, user=user)
+                    tasker = Tasker.objects.get(
+                        reference=task_reference, user=user)
                     if tasker.is_completed:
                         return {"success": True, "message": "Task already completed."}
                     task.taskers += 1
@@ -66,29 +69,30 @@ class TaskService:
                     tasker.save()
                     return message
                 else:
-                    Tasker.objects.create(user=user, task=task, is_completed=True)
+                    Tasker.objects.create(
+                        user=user, task=task, is_completed=True)
 
             else:
                 return {"success": False, "message": "Task has expired."}
         else:
             return {"success": False, "message": "Invalid Task."}
-            
 
     def commit_to_task(task_reference, user_reference):
         try:
             user = User.objects.get(reference=user_reference)
         except ObjectDoesNotExist:
             return {"success": False, "message": "user does not exist."}
-        
-        message = {"success": True, "message": "Successfully committed to task."}
+
+        message = {"success": True,
+                   "message": "Successfully committed to task."}
         task_exists = Task.objects.filter(reference=task_reference).exists()
-        
+
         if task_exists:
             task = Task.objects.get(reference=task_reference)
             Tasker.objects.create(user=user, task=task, is_completed=False)
             status = credit_finance(user_reference, task.wager)
             if status.get('success'):
-                    return message
+                return message
             return status
 
         else:

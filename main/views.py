@@ -48,48 +48,53 @@ def index(request):
             card_type = "No card"
 
     if request.method == 'POST':
-        user_reference = request.POST.get('qr_code')
+        card_reference = request.POST.get('qr_code')
         pin = request.POST.get('password')
-        print(user_reference)
-        print(pin)
-        user = authenticate(username=user_reference, password=pin)
+        card_exists = Card.objects.filter(reference=card_reference).exists()
+        if card_exists:
+            card = Card.objects.get(reference=card_reference)
+            user = authenticate(username=card.user.username, password=pin)
 
-        if user is not None:
-            login(request, user)
-            is_authenticated = True
+            if user is not None:
+                login(request, user)
+                is_authenticated = True
 
-            first_name = user.first_name
-            last_name = user.last_name
-            matric_number = user.matric_number
-            # Calculate the time threshold (1 hour ago)
-            time_threshold = timezone.now() - timedelta(hours=1)
+                first_name = user.first_name
+                last_name = user.last_name
+                matric_number = user.matric_number
+                # Calculate the time threshold (1 hour ago)
+                time_threshold = timezone.now() - timedelta(hours=1)
 
-            # Query the PendingTicket objects for the user within the time threshold
-            open_tickets = PendingTicket.objects.filter(
-                senders_hash=request.user, created_at__gte=time_threshold)
+                # Query the PendingTicket objects for the user within the time threshold
+                open_tickets = PendingTicket.objects.filter(
+                    senders_hash=request.user, created_at__gte=time_threshold)
 
-            # Get the count of the open tickets
-            open_tickets_count = open_tickets.count()
-            card_exists = Card.objects.filter(user=user).exists()
+                # Get the count of the open tickets
+                open_tickets_count = open_tickets.count()
+                card_exists = Card.objects.filter(user=user).exists()
 
-            if card_exists:
-                card = Card.objects.get(user=user)
-                card_type = card.type
+                if card_exists:
+                    card = Card.objects.get(user=user)
+                    card_type = card.type
+                else:
+                    card_type = "No card"
+
+                context = {
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'matric_number': matric_number,
+                    'card_type': card_type,
+                    'open_tickets_count': open_tickets_count,
+                    'error_message': error_message,
+                    'is_authenticated': is_authenticated
+                }
+
+                return render(request, 'login.html', context)
+
             else:
-                card_type = "No card"
-
-            context = {
-                'first_name': first_name,
-                'last_name': last_name,
-                'matric_number': matric_number,
-                'card_type': card_type,
-                'open_tickets_count': open_tickets_count,
-                'error_message': error_message,
-                'is_authenticated': is_authenticated
-            }
-
-            return render(request, 'login.html', context)
-
+                error_message = {"status": True,
+                                 "message": "Invalid Credentials"}
+                return render(request, 'login.html', {'error_message': error_message, 'is_authenticated': is_authenticated})
         else:
             error_message = {"status": True, "message": "Invalid Credentials"}
             return render(request, 'login.html', {'error_message': error_message, 'is_authenticated': is_authenticated})
