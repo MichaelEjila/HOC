@@ -16,8 +16,13 @@ from django.contrib.auth.decorators import login_required
 
 
 def index(request):
-    error_message = {"status":False, "message": "No errors"}
+    error_message = {"status": False, "message": "No errors"}
     is_authenticated = True
+    first_name = ''
+    last_name = ''
+    matric_number = ''
+    card_type = ''
+    open_tickets_count = ''
     if not request.user.is_authenticated:
         is_authenticated = False
     else:
@@ -29,18 +34,18 @@ def index(request):
         time_threshold = timezone.now() - timedelta(hours=1)
 
         # Query the PendingTicket objects for the user within the time threshold
-        open_tickets = PendingTicket.objects.filter(senders_hash=request.user, created_at__gte=time_threshold)
+        open_tickets = PendingTicket.objects.filter(
+            senders_hash=request.user, created_at__gte=time_threshold)
 
         # Get the count of the open tickets
         open_tickets_count = open_tickets.count()
         card_exists = Card.objects.filter(user=user).exists()
-        
+
         if card_exists:
             card = Card.objects.get(user=user)
             card_type = card.type
         else:
             card_type = "No card"
-
 
     if request.method == 'POST':
         user_reference = request.POST.get('qr_code')
@@ -48,7 +53,7 @@ def index(request):
         print(user_reference)
         print(pin)
         user = authenticate(username=user_reference, password=pin)
-        
+
         if user is not None:
             login(request, user)
             is_authenticated = True
@@ -60,12 +65,13 @@ def index(request):
             time_threshold = timezone.now() - timedelta(hours=1)
 
             # Query the PendingTicket objects for the user within the time threshold
-            open_tickets = PendingTicket.objects.filter(senders_hash=request.user, created_at__gte=time_threshold)
+            open_tickets = PendingTicket.objects.filter(
+                senders_hash=request.user, created_at__gte=time_threshold)
 
             # Get the count of the open tickets
             open_tickets_count = open_tickets.count()
             card_exists = Card.objects.filter(user=user).exists()
-            
+
             if card_exists:
                 card = Card.objects.get(user=user)
                 card_type = card.type
@@ -79,54 +85,58 @@ def index(request):
                 'card_type': card_type,
                 'open_tickets_count': open_tickets_count,
                 'error_message': error_message,
-                'is_authenticated' : is_authenticated
+                'is_authenticated': is_authenticated
             }
-            
+
             return render(request, 'login.html', context)
-        
+
         else:
             error_message = {"status": True, "message": "Invalid Credentials"}
-            return render(request, 'login.html', {'error_message': error_message, 'is_authenticated' : is_authenticated})
+            return render(request, 'login.html', {'error_message': error_message, 'is_authenticated': is_authenticated})
 
     context = {
-                'first_name': first_name,
-                'last_name': last_name,
-                'matric_number': matric_number,
-                'card_type': card_type,
-                'open_tickets_count': open_tickets_count,
-                'error_message': error_message,
-                'is_authenticated' : is_authenticated
-            }
+        'first_name': first_name,
+        'last_name': last_name,
+        'matric_number': matric_number,
+        'card_type': card_type,
+        'open_tickets_count': open_tickets_count,
+        'error_message': error_message,
+        'is_authenticated': is_authenticated
+    }
 
     return render(request, 'login.html', context)
+
 
 @login_required
 def trivia_view(request):
 
-    #show events
-    #if user will attend
-        #take event wager from their stingy hand
-    #if user is attending  
-        #reward the sure guy
-    error_message = {"status":False, "message": "No errors"}
+    # show events
+    # if user will attend
+    # take event wager from their stingy hand
+    # if user is attending
+    # reward the sure guy
+    error_message = {"status": False, "message": "No errors"}
     if request.user.is_authenticated:
         events = Event.objects.all()
 
         if request.method == 'POST':
             event_reference = request.POST.get('event_reference')
-            event_exists = Event.objects.filter(reference=event_reference).exists()
+            event_exists = Event.objects.filter(
+                reference=event_reference).exists()
 
             if event_exists:
                 event = Event.objects.get(reference=event_reference)
-                
+
                 if not event.is_completed:
                     event.will_attend = True
                     event.save()
 
-                return redirect('trivia_view')  # Redirect to the same view after updating the field
+                # Redirect to the same view after updating the field
+                return redirect('trivia_view')
 
-            else: 
-                error_message = {'status':True, "message": "Event does not exist"}
+            else:
+                error_message = {'status': True,
+                                 "message": "Event does not exist"}
 
         else:
             context = {
@@ -136,13 +146,13 @@ def trivia_view(request):
 
             return render(request, 'trivia.html', context)
     is_authenticated = False
-    return render(request, 'login.html', {'error_message': error_message, "is_authenticated":is_authenticated})
+    return render(request, 'login.html', {'error_message': error_message, "is_authenticated": is_authenticated})
 
 
 def account_view(request):
-    #shows balance, name, car
-    #migrate card, show open ticket, scan open tickets/events, send directly to matric
-    error_message = {"status":False, "message": "No errors"}
+    # shows balance, name, car
+    # migrate card, show open ticket, scan open tickets/events, send directly to matric
+    error_message = {"status": False, "message": "No errors"}
     message = ''
     user = request.user
     qr_hash = ''
@@ -158,9 +168,9 @@ def account_view(request):
     last_name = user.last_name
     current_time = timezone.now()
     one_hour_ago = current_time - timezone.timedelta(hours=1)
-    pending_tickets = PendingTicket.objects.filter(senders_hash=user.username, created_at__gte=one_hour_ago)
+    pending_tickets = PendingTicket.objects.filter(
+        senders_hash=user.username, created_at__gte=one_hour_ago)
 
-    
     if request.method == "POST":
         reference = request.POST.get("scan_ticket")
         matric_number = request.POST.get("matric_number")
@@ -170,35 +180,40 @@ def account_view(request):
 
             # Perform the scan tickets logic using the "reference" value
             # get reference check if it's an event and confirm the event
-                #if it's not check if it's a valid pending ticket and confirm the ticket
+            # if it's not check if it's a valid pending ticket and confirm the ticket
             event_validity = EventService.attend_event(reference, request.user)
-            task_validity = TaskService.complete_task(reference, request.user.reference)
+            task_validity = TaskService.complete_task(
+                reference, request.user.reference)
             if event_validity.get("success"):
                 message = event_validity.get("message")
-                error_message = {"status":False, "message": message}
+                error_message = {"status": False, "message": message}
                 return redirect('account_view')
             elif task_validity.get("success"):
                 message = task_validity.get("message")
-                error_message = {"status":False, "message": message}
+                error_message = {"status": False, "message": message}
                 return redirect('account_view')
-            
+
             else:
-                error_message = {"status":True, "message": event_validity.get("message")}
-                transaction_validity = SendPointsService.confirm_pending_tickets(reference, request.user.reference)
+                error_message = {"status": True,
+                                 "message": event_validity.get("message")}
+                transaction_validity = SendPointsService.confirm_pending_tickets(
+                    reference, request.user.reference)
 
                 if transaction_validity.get("success"):
                     message = transaction_validity.get("message")
-                    error_message = {"status":False, "message": message}
+                    error_message = {"status": False, "message": message}
                     return redirect('account_view')
                 else:
-                    error_message = {"status":True, "message": transaction_validity.get("message")}
+                    error_message = {
+                        "status": True, "message": transaction_validity.get("message")}
                     return redirect('account_view')
-                
+
         elif (matric_number and amount) is not None:
             # Perform the send directly logic using the "reference" value
             # get reference or matric number
             # pull recipient account and initiate send points
-            user_exists = User.objects.filter(reference=reference).exists() or  User.objects.filter(matric_number__endswith=matric_number).exists()
+            user_exists = User.objects.filter(reference=reference).exists(
+            ) or User.objects.filter(matric_number__endswith=matric_number).exists()
             breakpoint()
             if user_exists:
                 breakpoint()
@@ -207,25 +222,28 @@ def account_view(request):
                 except User.DoesNotExist:
                     recipient = User.objects.get(matric_number=matric_number)
 
-                status = SendPointsService.send_points(request.user, recipient, amount, SendPointsConstant.DIRECT)
+                status = SendPointsService.send_points(
+                    request.user, recipient, amount, SendPointsConstant.DIRECT)
                 if status.get("success"):
                     message = status.get("message")
-                    error_message = {"status":False, "message": message}
+                    error_message = {"status": False, "message": message}
                     return redirect('account_view')
                 else:
                     breakpoint()
-                    error_message = {"status":True, "message": status.get("message")}
-                
-            error_message = {"status":True, "message": "Invalid Credentials"}
+                    error_message = {"status": True,
+                                     "message": status.get("message")}
+
+            error_message = {"status": True, "message": "Invalid Credentials"}
             return redirect('account_view')
-        
-        elif (amount is not None) and (matric_number is None): 
+
+        elif (amount is not None) and (matric_number is None):
             user = request.user
             ticket_validity = SendPointsService.create_ticket(user, amount)
             if ticket_validity.get('success') == True:
                 message = ticket_validity.get('message')
-                error_message = {"status":False, "message": message}
-                ticket_obj = PendingTicket.objects.filter(senders_hash=request.user.reference).latest('created_at')
+                error_message = {"status": False, "message": message}
+                ticket_obj = PendingTicket.objects.filter(
+                    senders_hash=request.user.reference).latest('created_at')
                 qr_hash = ticket_obj.reference
                 context = {
                     'first_name': first_name,
@@ -234,21 +252,20 @@ def account_view(request):
                     'card_type': card_type,
                     'pending_tickets': pending_tickets,
                     'error_message': error_message,
-                    'qr_hash':qr_hash,
+                    'qr_hash': qr_hash,
                 }
                 return render(request, "account.html", context)
-            
-            error_message = {"status":True, "message": ticket_validity.get('message')}
+
+            error_message = {"status": True,
+                             "message": ticket_validity.get('message')}
             return redirect('account_view')
 
-            #taking amount, user details
-            #produce pending ticket for that transaction
-            #whoever confirms pending ticket is the recipient
-
+            # taking amount, user details
+            # produce pending ticket for that transaction
+            # whoever confirms pending ticket is the recipient
 
         # elif action == 'migrate card':
         #     pass
-    
 
     context = {
         'first_name': first_name,
@@ -257,22 +274,20 @@ def account_view(request):
         'card_type': card_type,
         'pending_tickets': pending_tickets,
         'error_message': error_message,
-        'qr_hash':qr_hash,
-        'message':message,
+        'qr_hash': qr_hash,
+        'message': message,
     }
-
 
     return render(request, "account.html", context)
 
 
-
-
 def transaction_view(request):
-    #Debit - amount, where, date and time
-    #Credit - amount, from, date and time
-    error_message = {"status":False, "message": "No errors"}
+    # Debit - amount, where, date and time
+    # Credit - amount, from, date and time
+    error_message = {"status": False, "message": "No errors"}
     user = request.user
-    transactions = Transaction.objects.filter(senders_hash=user.reference, transaction_type__in=["debit", "credit"]).order_by('-created_at')
+    transactions = Transaction.objects.filter(senders_hash=user.reference, transaction_type__in=[
+                                              "debit", "credit"]).order_by('-created_at')
 
     context = {
         "transactions": transactions,
@@ -283,13 +298,14 @@ def transaction_view(request):
 
 
 def task_view(request):
-    #Returns all tasks 
-    #complete tasks
-    #return number of open tasks
-    error_message = {"status":False, "message": "No errors"}
+    # Returns all tasks
+    # complete tasks
+    # return number of open tasks
+    error_message = {"status": False, "message": "No errors"}
     user = request.user
     tasks = Task.objects.all()
-    completed_tasks = Tasker.objects.filter(user=user, is_completed=True).values_list('task_id', flat=True)
+    completed_tasks = Tasker.objects.filter(
+        user=user, is_completed=True).values_list('task_id', flat=True)
 
     task_list = []
     for task in tasks:
@@ -309,9 +325,8 @@ def task_view(request):
     return render(request, 'tasks.html', context)
 
 
-
 def armstrongs_world(request):
-    #Return everything this nigga wants.
-    #implenting attending of attendees (he just means 10 out of 30)
-    error_message = {"status":False, "message": "No errors"}
+    # Return everything this nigga wants.
+    # implenting attending of attendees (he just means 10 out of 30)
+    error_message = {"status": False, "message": "No errors"}
     pass

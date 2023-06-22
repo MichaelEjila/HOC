@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@dy7lbx#t(a2s2lu)w!)7q_&^sz))vo+qz=oruq^(30glbyyk*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -148,7 +148,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # APPEND_SLASH = True
-# SESSION_COOKIE_SECURE = False 
+# SESSION_COOKIE_SECURE = False
 # SESSION_COOKIE_HTTPONLY = False
 # SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_SAVE_EVERY_REQUEST = True
