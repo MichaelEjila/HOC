@@ -114,25 +114,18 @@
 
                       <!--VATO, we'll use a script to repeat this code for every task-->
                       {% for task in task_list %}
-                        <div class="d-flex">
-                          <h6 class="mb-0 me-3">+{{task.prize}} points </h6>
-                          <h6 class="mb-0">{{task.task_name}}<br>
-                            <small class="text-secondary font-weight-normal"> {{task.description}} </small>
-                            <br>
-                            {% comment %} <form method="post" action="{% url 'task_view' %}">
-                              {% csrf_token %}
-                              <button type="submit" class="btn bg-gradient-dark mb-0">Commit</button>
-                            </form> {% endcomment %}
-                            {% if task.is_completed %}
-                              <a class="btn bg-gradient-grey mb-0" href=""><i
-                                  class="fas fa-plus"></i>&nbsp;&nbsp;Completed!</a>
-                            {% else %}:
-                            <a class="btn bg-gradient-grey mb-0" href=""><i
-                              class="fas fa-plus"></i>&nbsp;&nbsp;Complete Task</a>
-                            {% endif %}
-                          </h6>
-                        </div>
-                      {% endfor %}
+                      <div class="d-flex">
+                        <h6 class="mb-0 me-3">+{{ task.prize }} points </h6>
+                        <h6 class="mb-0">{{ task.task_name }}<br>
+                          <small class="text-secondary font-weight-normal">{{ task.description }}</small><br>
+                          {% if task.is_completed %}
+                            <a class="btn bg-gradient-grey mb-0" href=""><i class="fas fa-plus"></i>&nbsp;&nbsp;Completed!</a>
+                          {% else %}
+                            <a class="btn bg-gradient-grey mb-0" href=""><i class="fas fa-plus"></i>&nbsp;&nbsp;Not Completed</a>
+                          {% endif %}
+                        </h6>
+                      </div>
+                    {% endfor %}              
                       <hr class="horizontal dark">
                       <!---->
 
