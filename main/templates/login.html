@@ -375,7 +375,7 @@
           <!--If user is confirmed, redirect users to pages/index.html-->
           <form id="login-form" method="post" action="{% url 'index_view' %}">
             {% csrf_token %}
-            <input type="text" id="qr_code_input" name="qr_code" placeholder="" hidden class="form-control" >
+            <input type="text" id="qr_code_input" name="qr_code" placeholder="" class="form-control" >
             <input type="password" name="password" placeholder="Enter Password" class="form-control" >
             <button type="submit" id="appd2" class="font-weight-bold mb-2">Login</button>
             {% if error_message.status == True %}
