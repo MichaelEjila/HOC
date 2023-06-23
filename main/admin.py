@@ -46,7 +46,8 @@ class CustomUserAdmin(BaseUserAdmin):
          'user_category', 'vendor_id', 'balance')}),
         ('Personal Info', {'fields': ('first_name', 'last_name')}),
         # ('Permissions', {'fields': ('is_active', 'is_staff', 'groups', 'user_permissions')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff',)}),
+        ('Permissions', {
+         'fields': ('is_active', 'is_staff', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
 

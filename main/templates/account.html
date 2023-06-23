@@ -82,7 +82,7 @@
               <a class="btn btn-outline-primary btn-sm mb-0 me-3" href="{% url 'index_view' %}">Home</a>
             </li>
 
-            <!-- 
+           
             <li class="nav-item dropdown pe-2 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown"
                 aria-expanded="false">
@@ -90,50 +90,45 @@
               </a>
               <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
 
+                <!--VATO!!!!    Return the Notifications here via lists i.e <li> -->
 
                 <li>
                   <a class="dropdown-item border-radius-md" href="javascript:;">
-                    <div class="d-flex py-1">
-                      <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
-                        <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1"
-                          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                          <title>credit-card</title>
-                          <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
-                              <g transform="translate(1716.000000, 291.000000)">
-                                <g transform="translate(453.000000, 454.000000)">
-                                  <path class="color-background"
-                                    d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z"
-                                    opacity="0.593633743"></path>
-                                  <path class="color-background"
-                                    d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z">
-                                  </path>
-                                </g>
-                              </g>
-                            </g>
-                          </g>
-                        </svg>
-                      </div>
+                    
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="text-sm font-weight-normal mb-1">
-                          Account Credited with 10000 points
+
+                          {% if error_message.status == True %}
+                          <p>{{ error_message.message }}</p>
+                          
+                         {%else%} 
+                          <p> {{ message }}</p>
+
+                          {% endif %}
                         </h6>
-                        <p class="text-xs text-secondary mb-0 ">
-                          <i class="fa fa-clock me-1"></i>
-                          just now
-                        </p>
+                        
                       </div>
                     </div>
                   </a>
                 </li>
+
+                <!--Notifications ends here-->
+
+
+
               </ul>
-            </li> -->
+            </li>
           </ul>
         </div>
       </div>
     </nav>
     <!-- End Navbar -->
+    <!-- End Navbar -->
   </div>
+
+
+
+
   <div class="border-radius-xl mt-3 mx-3 position-relative" style="background-image: url('') ; background-size:;">
 
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
@@ -208,9 +203,9 @@
                 {% csrf_token %}
                 <div class="card-body p-3">
                   <!--VATO!! this subsection deals with the USERS account operations-->
-                  <button type="submit" class="btn btn-outline-dark w-100" name="load_point" value="scan-qr" onclick="openModal('scan-qr')">Load Point/Event Ticket</button>
-                  <br>
-                  <button type="submit" class="btn btn-outline-dark w-100" name="action" value="make-qr" onclick="openModal('make-qr')">Create Point Ticket</button>
+                  <button type="submit" class="btn btn-outline-dark w-100" name="load_point" value="scan-qr" onclick="openModal('scan-qr')">Scan Task Ticket</button>
+                  
+                  {% comment %} <button type="submit" class="btn btn-outline-dark w-100" name="action" value="make-qr" onclick="openModal('make-qr')" unclickable>Create Point Ticket</button> {% endcomment %}
                   <br>
                   <button type="submit" class="btn btn-outline-dark w-100" name="action" value="matric" onclick="openModal('matric')">Send Direct to Matric</button>
                 </div>
@@ -388,7 +383,7 @@ your logic should trigger the function proceed('BlockHsh') to control this flow,
                                 <form id="sendtomatric" method="post" action="">
                                   {% csrf_token %}
                                   Receivers MatricNumber
-                                  <input type="number" id="blocknumber" name="matric_number" placeholder="last 5 digits only"
+                                  <input type="number" id="blocknumber" name="matric_number" placeholder="last 4 digits only"
                                   class="form-control" required>
                                   <br>
                                   Amount

@@ -13,6 +13,9 @@ from main.tasks.services import TaskService
 from main.transaction.send_points.services import SendPointsService
 from main.utils.constants import SendPointsConstant
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+
+from main.utils.services import get_finance_user
 
 
 def index(request):
@@ -49,11 +52,12 @@ def index(request):
 
     if request.method == 'POST':
         card_reference = request.POST.get('qr_code')
-        pin = request.POST.get('password')
+        password = request.POST.get('password')
         card_exists = Card.objects.filter(reference=card_reference).exists()
         if card_exists:
             card = Card.objects.get(reference=card_reference)
-            user = authenticate(username=card.user.reference, password=pin)
+            user = authenticate(
+                username=card.user.reference, password=password)
 
             if user is not None:
                 login(request, user)
@@ -171,7 +175,8 @@ def account_view(request):
     last_name = user.last_name
     current_time = timezone.now()
     one_hour_ago = current_time - timezone.timedelta(hours=1)
-    pending_tickets = PendingTicket.objects.filter(senders_hash=user.username, created_at__gte=one_hour_ago)
+    pending_tickets = PendingTicket.objects.filter(
+        senders_hash=user.username, created_at__gte=one_hour_ago)
 
     if request.method == "POST":
         reference = request.POST.get("scan_ticket")
@@ -182,51 +187,155 @@ def account_view(request):
             # Perform the scan tickets logic using the "reference" value
             # get reference check if it's an event and confirm the event
             event_validity = EventService.attend_event(reference, request.user)
-            task_validity = TaskService.complete_task(reference, request.user.reference)
+            task_validity = TaskService.complete_task(
+                reference, request.user.reference)
             if event_validity.get("success"):
                 message = event_validity.get("message")
                 error_message = {"status": False, "message": message}
-                return redirect('account_view')
+                context = {
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'balance': balance,
+                    'card_type': card_type,
+                    'pending_tickets': pending_tickets,
+                    'error_message': error_message,
+                    'qr_hash': qr_hash,
+                }
+
+                return render(request, "account.html", context)
+
             elif task_validity.get("success"):
                 message = task_validity.get("message")
                 error_message = {"status": False, "message": message}
-                return redirect('account_view')
+                context = {
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'balance': balance,
+                    'card_type': card_type,
+                    'pending_tickets': pending_tickets,
+                    'error_message': error_message,
+                    'qr_hash': qr_hash,
+                }
+
+                return render(request, "account.html", context)
+
             else:
-                error_message = {"status": True, "message": event_validity.get("message")}
-                transaction_validity = SendPointsService.confirm_pending_tickets(reference, request.user.reference)
+                error_message = {"status": True,
+                                 "message": event_validity.get("message")}
+                transaction_validity = SendPointsService.confirm_pending_tickets(
+                    reference, request.user.reference)
 
                 if transaction_validity.get("success"):
                     message = transaction_validity.get("message")
                     error_message = {"status": False, "message": message}
-                    return redirect('account_view')
+                    context = {
+                        'first_name': first_name,
+                        'last_name': last_name,
+                        'balance': balance,
+                        'card_type': card_type,
+                        'pending_tickets': pending_tickets,
+                        'error_message': error_message,
+                        'qr_hash': qr_hash,
+                    }
+
+                    return render(request, "account.html", context)
+
                 else:
-                    error_message = {"status": True, "message": transaction_validity.get("message")}
-                    return redirect('account_view')
+                    error_message = {
+                        "status": True, "message": transaction_validity.get("message")}
+
+                    context = {
+                        'first_name': first_name,
+                        'last_name': last_name,
+                        'balance': balance,
+                        'card_type': card_type,
+                        'pending_tickets': pending_tickets,
+                        'error_message': error_message,
+                        'qr_hash': qr_hash,
+                    }
+
+                    return render(request, "account.html", context)
 
         elif matric_number and amount:
             # Perform the send directly logic using the "reference" value
             # get reference or matric number
             # pull recipient account and initiate send points
-            user_exists = User.objects.filter(reference=reference).exists() or User.objects.filter(matric_number__endswith=matric_number).exists()
-            if user_exists:
-                try:
-                    recipient = User.objects.get(reference=reference)
-                except User.DoesNotExist:
+            if len(matric_number) > 3:
+                user_exists = User.objects.filter(reference=reference).exists(
+                ) or User.objects.filter(matric_number__endswith=matric_number).exists()
+
+                if user_exists:
                     try:
-                        recipient = User.objects.get(matric_number=matric_number)
+                        recipient = User.objects.get(reference=reference)
                     except User.DoesNotExist:
-                        recipient = User.objects.get(vendor_id=matric_number)
+                        try:
+                            recipient = User.objects.get(
+                                matric_number__endswith=matric_number)
+                        except User.DoesNotExist:
+                            try:
+                                recipient = User.objects.get(
+                                    vendor_id=matric_number)
+                            except User.DoesNotExist:
+                                error_message = {"status": True,
+                                                 "message": "Invalid Details"}
+                                context = {
+                                    'first_name': first_name,
+                                    'last_name': last_name,
+                                    'balance': balance,
+                                    'card_type': card_type,
+                                    'pending_tickets': pending_tickets,
+                                    'error_message': error_message,
+                                    'qr_hash': qr_hash,
+                                }
 
-                status = SendPointsService.send_points(request.user, recipient, amount, SendPointsConstant.DIRECT)
-                if status.get("success"):
-                    message = status.get("message")
-                    error_message = {"status": False, "message": message}
-                    return redirect('account_view')
-                else:
-                    error_message = {"status": True, "message": status.get("message")}
+                                return render(request, "account.html", context)
 
-            error_message = {"status": True, "message": "Invalid Credentials"}
-            return redirect('account_view')
+                    status = SendPointsService.send_points(
+                        request.user.reference, recipient.reference, amount, SendPointsConstant.DIRECT)
+                    if status.get("success"):
+                        message = status.get("message")
+                        error_message = {"status": False, "message": message}
+                        context = {
+                            'first_name': first_name,
+                            'last_name': last_name,
+                            'balance': balance,
+                            'card_type': card_type,
+                            'pending_tickets': pending_tickets,
+                            'error_message': error_message,
+                            'qr_hash': qr_hash,
+                        }
+
+                        return render(request, "account.html", context)
+                    else:
+                        error_message = {"status": True,
+                                         "message": status.get("message")}
+
+                error_message = {"status": True,
+                                 "message": "Invalid Credentials"}
+                context = {
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'balance': balance,
+                    'card_type': card_type,
+                    'pending_tickets': pending_tickets,
+                    'error_message': error_message,
+                    'qr_hash': qr_hash,
+                }
+
+                return render(request, "account.html", context)
+            else:
+                error_message = {"status": True, "message": "Invalid Details"}
+                context = {
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'balance': balance,
+                    'card_type': card_type,
+                    'pending_tickets': pending_tickets,
+                    'error_message': error_message,
+                    'qr_hash': qr_hash,
+                }
+
+                return render(request, "account.html", context)
 
         elif amount is not None and matric_number is None:
             user = request.user
@@ -234,7 +343,8 @@ def account_view(request):
             if ticket_validity.get('success') == True:
                 message = ticket_validity.get('message')
                 error_message = {"status": False, "message": message}
-                ticket_obj = PendingTicket.objects.filter(senders_hash=request.user.reference).latest('created_at')
+                ticket_obj = PendingTicket.objects.filter(
+                    senders_hash=request.user.reference).latest('created_at')
                 qr_hash = ticket_obj.reference
 
             # Update the context dictionary with all the required variables
@@ -247,7 +357,7 @@ def account_view(request):
                 'error_message': error_message,
                 'qr_hash': qr_hash,
             }
-            
+
             return render(request, "account.html", context)
 
     context = {
@@ -261,17 +371,28 @@ def account_view(request):
     }
     return render(request, "account.html", context)
 
+
 def transaction_view(request):
     # Debit - amount, where, date and time
     # Credit - amount, from, date and time
     error_message = {"status": False, "message": "No errors"}
     user = request.user
-    transactions = Transaction.objects.filter(senders_hash=user.reference, transaction_type__in=[
-                                              "debit", "credit"]).order_by('-created_at')
+    transactions = Transaction.objects.filter(
+        Q(senders_hash=user.reference) | Q(recipients_hash=user.reference),
+        transaction_type__in=["debit", "credit"]
+    ).order_by('-created_at')
+    recipients_names = [User.objects.get(
+        reference=transaction.recipients_hash).get_full_name() for transaction in transactions]
+    senders_names = [User.objects.get(
+        reference=transaction.senders_hash).get_full_name() for transaction in transactions]
+
+    transactions_with_names = zip(
+        transactions, recipients_names, senders_names)
 
     context = {
-        "transactions": transactions,
+        "transactions_with_names": transactions_with_names,
         'error_message': error_message,
+        'user': user
     }
 
     return render(request, "trans.html", context)
@@ -324,6 +445,7 @@ def task_view(request):
     # Render the template with the context
     return render(request, 'tasks.html', context)
 
+
 def armstrongs_world(request):
     # Return everything this nigga wants.
     # implenting attending of attendees (he just means 10 out of 30)
@@ -340,29 +462,38 @@ def armstrongs_world(request):
         if finance_user is not None:
             amount = request.POST.get('amount')
             password = request.POST.get('password')
-            authenticated_user = authenticate(username=finance_user.username, password=password)
+            authenticated_user = authenticate(
+                username=finance_user.username, password=password)
 
             if authenticated_user is not None:
                 finance_user.balance += amount
                 message = "Succesfully Injected points"
             else:
-                error_message = {"status": True, "message": "Invalid Credentials"}
+                error_message = {"status": True,
+                                 "message": "Invalid Credentials"}
 
         else:
-            error_message = {"status": True, "message": "Finance user not set up"}
+            error_message = {"status": True,
+                             "message": "Finance user not set up"}
 
         context = {
             'error_message': error_message,
             'message': message,
-            'number_of_users' :number_of_users,
-            'number_of_diamond_cards' : number_of_diamond_cards,
+            'number_of_users': number_of_users,
+            'number_of_diamond_cards': number_of_diamond_cards,
             'number_of_club_cards': number_of_club_cards,
-            'active_tasks' : active_tasks,
-            'number_of_pending_tickets' : number_of_pending_tickets,
+            'active_tasks': active_tasks,
+            'number_of_pending_tickets': number_of_pending_tickets,
 
         }
 
         return render(request, 'flourish.html', context)
 
-    else: 
+    else:
         error_message = {"status": True, "message": "Not Authenticated"}
+        context = {
+            'error_message': error_message,
+
+        }
+
+        return render(request, 'flourish.html', context)

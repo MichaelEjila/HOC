@@ -83,26 +83,31 @@
 
 
             <ul class="list-group">
-              {% for transaction in transactions %}
+              {% for transaction, recipient_name, sender_name in transactions_with_names %}
                 <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
                   <div class="d-flex align-items-center">
                     <button
                       class="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-3 btn-sm d-flex align-items-center justify-content-center"><i
                         class="fas fa-arrow-down"></i></button>
                     <div class="d-flex flex-column">
-                      {% if transaction.status == 'debit' %}
-                        <h6 class="mb-1 text-dark text-sm">Direct send to {{transaction.recipient}}</h6>
+                      {% if transaction.senders_hash == user.reference %}
+                        <h6 class="mb-1 text-dark text-sm">Direct send to {{recipient_name}}</h6>
                         <span class="text-xs">{{transaction.created_at}}</span>
-                        {% if transaction.status == 'credit' %}
-                        <h6 class="mb-1 text-dark text-sm">Credit from {{transaction.recipient}}</h6>
+
+                      {% endif %}
+
+                      {% if transaction.recipients_hash == user.reference %}
+
+                        <h6 class="mb-1 text-dark text-sm">Credit from {{sender_name}}</h6>
                         <span class="text-xs">{{created_at}}</span>
                         <span class="text-xs">Baller!</span>
-                        {% endif %}
+
                       {% endif %}
+
                     </div>
                   </div>
                   <div class="d-flex align-items-center text-danger text-gradient text-sm font-weight-bold">
-                    -2,500
+                    {{transaction.amount}}
                   </div>
                 </li>
               {% endfor %}
