@@ -31,14 +31,29 @@
 
   <script src="{% static "js/modalpops.js"%}"></script>
   <style>
-    #video {
-      width: 60vw;
-      height: 30vh;
-    }
-
+   
     #scan-btn {
       margin-top: 10px;
     }
+
+    #video{
+      width:100%;
+      height:100%;
+    }
+
+    .modal{
+      margin:15%;
+      
+    
+    }
+
+    .close-btn{
+      font-size:30px;
+      font-weight:bolder;
+     
+
+    }
+
   </style>
 
 </head>
@@ -204,30 +219,25 @@
             </div>
           </div>
         </div>
-      </div>
+      
 
       <!-- Scan QR Modal -->
       <div id="scan-qr-modal" class="modal">
         <div class="modal-content">
-          <div class="overflow-hidden position-relative border-radius-xl"
-            style="background-image: url('{% static 'img/bg000.jpg' %}');"><!--this is not an error-->
+         
+         <div class="overflow-hidden position-relative border-radius-xl"
+            style="background-image: url('{% static 'img/bty.jpg' %}');"><!--this is not an error--> 
             <span class="mask bg-gradient-dark"></span>
-            <div class="card-body position-relative z-index-1 p-3">
-              <div class="container-fluid py-4">
+            <div class="card-body position-relative">
+              <div class="container-fluid py-6">
                 <span class="close-btn" onclick="closeModal('scan-qr');">&times;</span>
-                <div class="row">
-                  <div class="col-lg-8">
-                    <div class="row">
-                      <div class="card move-on-hover mt-4">
+                      <div class="card move-on-hover mt-1">
                         <div class="card-body">
-                          <div class="d-flex">
-
+                          <div id="">
+                            <video id="video" ></video>
+                          </div>
+                         
                             
-                            {% comment %} <!--VATO!!! pull the scanned open ticket hash from here!!!
-                           submit the form to post value using SendEUNU('scannedhash')
-                              then you can pull the value from [form action="{% url 'openTicket' %}"]
-                              --> {% endcomment %}
-
                             <div id="">
                               <form id="scannedhash" method="post" action="">
                                 {% csrf_token %} 
@@ -241,11 +251,8 @@
                                   <button onclick="" id="appd2" class="btn btn-outline-dark w-100">Load Ticket</button>
                               </form>
                               
-                            </div>
-                            <div id="video-container cont">
-                              <video id="video"></video>
-                              <br />
-                            </div>  
+                            
+                            
                           </div>
                           <button onclick="scanQRCode();" id="appd1" class="btn btn-outline-dark w-100">Scan QR</button>     
                         </div>
@@ -268,8 +275,10 @@ your logic should trigger the function proceed('BlockHsh') to control this flow,
                             proceed('BlockHsh')
                           </script> -->
                           {% comment %} <!-- {% endif %} --> {% endcomment %}
-                          <p class="text-white text-sm opacity-8 mb-0 loading-icon" id="BlockHsh-loading">Verifying...
-                          </p>
+                          {% comment %} <p class="text-white text-sm opacity-8 mb-0 loading-icon" id="BlockHsh-loading">Verifying...
+                          </p> {% endcomment %}
+
+
                           {% if error_message.status == True %}
                             <div id="BlockHsh-success" class="success-message">{{ error_message.message }}
                               <span>&#10004;</span>
@@ -277,7 +286,7 @@ your logic should trigger the function proceed('BlockHsh') to control this flow,
                   
                             
                           {% endif %}
-                          <h6 class="text-white mb-0">BLOCK HASH VERIFIER</h6>
+                          <small class="text-white mb-0">BLOCK HASH VERIFIER</small>
                         </div>
 
                       </div>
@@ -308,7 +317,7 @@ your logic should trigger the function proceed('BlockHsh') to control this flow,
       <div id="make-qr-modal" class="modal">
         <div class="modal-content">
           <div class="overflow-hidden position-relative border-radius-xl"
-            style="background-image: url('{% static 'img/bg000.jpg' %}');"><!--this is not an error-->
+            style="background-image: url('{% static 'img/bty.jpg' %}');"><!--this is not an error-->
             <span class="mask bg-gradient-dark"></span>
             <div class="card-body position-relative z-index-1 p-3">
               <div class="container-fluid py-4">
@@ -327,15 +336,15 @@ your logic should trigger the function proceed('BlockHsh') to control this flow,
                                   {% csrf_token %}
                                   
                                   <input type="number" id="make-qr" name="amount" placeholder="enter amount"
-                                    class="centera" required>
-                                    <br />
+                                  class="form-control" required>
+                                    <br>
                                     <button type="submit" class="btn bg-gradient-dark mb-0" onclick="proceed('make-qr')">&nbsp;&nbsp;Create Cash
                                       Ticket</button>
                                 </form>
                               </div>
                               <!--VATO!!! Display Open Ticket QRcode here-->
-                              <div id="OpenticketQR"> {{ qr_hash }}</div>
-
+                              <p id="OpenticketQR">trertgf {{ qr_hash }}</p>
+                              
                             </small>
                           </div>
                         </div>
@@ -344,25 +353,8 @@ your logic should trigger the function proceed('BlockHsh') to control this flow,
                       
                       <div class="d-flex">
                         <div class="me-4">
-                          <br>
-
-                          <!--VATO!! use logic to control this display
-  your logic should trigger the function proceed('make-qr') to control this flow, then suspend this function from calling itself 
-  -->
-
-                          {% comment %} <!-- {% if (a hash is gotten and posted) %} --> {% endcomment %}
-                          <!-- <script>
-                              proceed('make-qr')
-                            </script> -->
-                          {% comment %} <!-- {% endif %} --> {% endcomment %}
-
-                          <p class="text-white text-sm opacity-8 mb-0 loading-icon" id="make-qr-loading">Verifying...
-                          </p>
-                          <div id="make-qr-success" class="success-message">Request Successful
-                            <span>&#10004;</span>
-                          </div>
-                          <!-- VATO!!!!   Return the User FullName HEre-->
-                          <h6 class="text-white mb-0">BLOCK HASH GENERATOR</h6>
+                                <br>
+                          <small class="text-white mb-0">BLOCK HASH GENERATOR</small>
                         </div>
                       </div>
                     </div>
@@ -378,7 +370,7 @@ your logic should trigger the function proceed('BlockHsh') to control this flow,
       <div id="matric-modal" class="modal">
         <div class="modal-content">
           <div class="overflow-hidden position-relative border-radius-xl"
-            style="background-image: url('{% static 'img/bg000.jpg' %}');"><!--this is not an error-->
+            style="background-image: url('{% static 'img/bty.jpg' %}');"><!--this is not an error-->
             <span class="mask bg-gradient-dark"></span>
             <div class="card-body position-relative z-index-1 p-3">
               <div class="container-fluid py-4">
@@ -395,14 +387,14 @@ your logic should trigger the function proceed('BlockHsh') to control this flow,
                               <div id="mkT">
                                 <form id="sendtomatric" method="post" action="">
                                   {% csrf_token %}
-                                  Receivers BlockNumber
+                                  Receivers MatricNumber
                                   <input type="number" id="blocknumber" name="matric_number" placeholder="last 5 digits only"
-                                    class="centera" required>
+                                  class="form-control" required>
                                   <br>
                                   Amount
                                   <input type="number" id="blocknumber" name="amount" placeholder="No of points"
-                                  class="centera" required>
-                                  <button type= class="btn bg-gradient-dark mb-0" onclick="proceed('matric')">&nbsp;&nbsp;Send Points</button>
+                                  class="form-control" required>
+                                  <button type="submit" class= "btn bg-gradient-dark mb-0" onclick="proceed('matric')">&nbsp;&nbsp;Send Points</button>
 
                                 </form>
                               </div>
@@ -414,25 +406,8 @@ your logic should trigger the function proceed('BlockHsh') to control this flow,
                       
                       <div class="d-flex">
                         <div class="me-4">
-                          <br>
-
-                          <!--VATO!! use logic to control this display
-    your logic should trigger the function proceed('make-qr') to control this flow, then suspend this function from calling itself 
-    -->
-{% comment %} 
-                          <!-- {% if (a hash is gotten and posted) %} -->
-                          <!-- <script>
-                                proceed('matric')
-                              </script> -->
-                          <!-- {% endif %} --> {% endcomment %}
-
-                          <p class="text-white text-sm opacity-8 mb-0 loading-icon" id="matric-loading">Verifying...
-                          </p>
-                          <div id="matric-success" class="success-message">Request Successful
-                            <span>&#10004;</span>
-                          </div>
-                          <!-- VATO!!!!   Return the User FullName HEre-->
-                          <small class="text-white mb-0">SEND DIRECT TO MATRIC/VENDOR NUMBER</small>
+                        
+                          <small class="text-white mb-0">SEND DIRECT</small>
                         </div>
                       </div>
                     </div>

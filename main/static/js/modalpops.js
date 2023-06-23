@@ -1,7 +1,7 @@
 function openModal(modalId) {
     const modal = document.getElementById(modalId + '-modal');
 
-    
+
 
     if (modalId == "make-qr") {
         const dis2 = document.getElementById('OpenticketQR');
@@ -39,12 +39,10 @@ function proceed(modalId) {
         const dis2 = document.getElementById('OpenticketQR');
 
         setTimeout(function () {
-            dis1.style.display = 'none';
-            loadingIcon.style.display = 'none';
-            successMessage.style.display = 'block';
+
             dis2.style.display = 'block';
 
-        }, 1000);
+        }, 3000);
 
 
         //   setTimeout(function () {

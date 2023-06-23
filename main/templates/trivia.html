@@ -23,8 +23,6 @@
  <!-- CSS Files -->
  <link id="pagestyle" href="{% static "css/soft-ui-dashboard.css" %}" rel="stylesheet" />
   
-  <!-- Nepcha Analytics (nepcha.com) -->
-  <script defer data-site="DOMAIN_NAME" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100 virtual-reality">
@@ -142,31 +140,35 @@
                   <div class="d-flex">
                     <h5 class="mb-0 text-white">EVENTS</h5>
                     <div class="ms-auto">
-                      <h1 class="text-white text-end mb-0 mt-n2">5</h1>
-                      <p class="text-sm mb-0 text-white">events</p>
+                      <h2 class="text-white text-end mb-0 mt-n2">All</h2>
+                      <p class="text-sm mb-0 text-white">Open</p>
                     </div>
                   </div>
-
+                  {% for event in events %}
                   <div class="row mt-4">
                     <div class="col-lg-4 col-md-4">
                       <div class="card move-on-hover overflow-hidden">
 
                         <div class="card-body" id="seco">
                           <div class="d-flex">
-                            <h6 class="mb-0 me-3">Tue</h6>
-                            <h6 class="mb-0">Tech Talk Show<br>
-                              <small class="text-secondary font-weight-normal">PFA</small>
+                            <h6 class="mb-0 me-3">...</h6>
+                            <h6 class="mb-0">{{event.name}}<br>
+                              <small class="text-secondary font-weight-normal">Expires: {{event.expires_at}}</small>
                               <br>
                               <!-- <a class="btn bg-gradient-dark mb-0" href="">I'll Attend</a> -->
-                              <a class="btn bg-gradient-grey mb-0" href=""><i
-                                  class="fas fa-plus"></i>&nbsp;&nbsp;Completed</a>
+                              <a class="btn bg-gradient-grey mb-0" href="#seco"><i
+                                  class="fas fa-plus"></i>&nbsp;&nbsp;Play @ Venue</a>
                             </h6>
 
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                           <hr class="horizontal dark">
+                          {% endfor %}
 
-
-                          <div class="d-flex">
+                          {% comment %} <div class="d-flex">
                             <h6 class="mb-0 me-3">Wed</h6>
                             <h6 class="mb-0">Skill Day 1<br />
                               <small class="text-secondary font-weight-normal">Engineering Faculty</small>
@@ -208,28 +210,9 @@
                               <!-- <a class="btn bg-gradient-grey mb-0" href=""><i
                                   class="fas fa-plus"></i>&nbsp;&nbsp;Attending</a> -->
                             </h6>
-                          </div>
+                          </div> {% endcomment %}
 
-                          {% for event in events %}
-                          <div class="d-flex">
-                            <h6 class="mb-0 me-3">{{event.time}}</h6>
-                            <h6 class="mb-0">{{event.name}}<br>
-                              <small class="text-secondary font-weight-normal">Event ends at {{event.expires_at}}</small>
-                              <br>
-                              
-                              {% if event.will_attend == False %}
-                                <a class="btn bg-gradient-dark mb-0" href="">I'll Attend</a>
-                              {{else}}  
-                                <a class="btn bg-gradient-grey mb-0" href=""><i
-                                    class="fas fa-plus"></i>&nbsp;&nbsp;Attending</a>
-                              {% endif %}
-                            </h6>
-                          {% endfor %}
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                          
 
                 </div>
                 <a href="javascript:;" class="w-100 text-center py-1" data-bs-toggle="tooltip" data-bs-placement="top"

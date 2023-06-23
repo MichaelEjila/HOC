@@ -30,7 +30,7 @@
  <link id="pagestyle" href="{% static "css/soft-ui-dashboard.css" %}" rel="stylesheet" />
 
   <!-- Nepcha Analytics (nepcha.com) -->
-  <script defer data-site="DOMAIN_NAME" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+  <script defer data-site="https://www.eunu.tech" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100 virtual-reality">
@@ -61,7 +61,7 @@
             <li class="nav-item dropdown pe-2 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown"
                 aria-expanded="false">
-                <i class="fa fa-bell cursor-pointer"></i>
+                <i class="fa fa-bell cursor-pointer">Notify</i>
               </a>
               <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
 
@@ -69,34 +69,22 @@
 
                 <li>
                   <a class="dropdown-item border-radius-md" href="javascript:;">
-                    <div class="d-flex py-1">
-                      <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
-                        <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1"
-                          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                          <title>credit-card</title>
-                          <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
-                              <g transform="translate(1716.000000, 291.000000)">
-                                <g transform="translate(453.000000, 454.000000)">
-                                  <path class="color-background"
-                                    d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z"
-                                    opacity="0.593633743"></path>
-                                  <path class="color-background"
-                                    d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z">
-                                  </path>
-                                </g>
-                              </g>
-                            </g>
-                          </g>
-                        </svg>
-                      </div>
+                    
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="text-sm font-weight-normal mb-1">
-                          Account Credited with 10000 points
+
+                          {% if error_message.status == True %}
+                          <p>{{ error_message.message }}</p>
+                          
+
+                         {%else%} 
+                          <p> {{ qr_hash }}</p>
+
+                          {% endif %}
                         </h6>
                         <p class="text-xs text-secondary mb-0 ">
                           <i class="fa fa-clock me-1"></i>
-                          just now
+                         
                         </p>
                       </div>
                     </div>
@@ -135,7 +123,7 @@
       <div class="section min-vh-85 position-relative transform-scale-0 transform-scale-md-7">
         <div class="container">
           <br><br />
-          <div class="col-lg-8 col-md-11">
+          {% comment %} <div class="col-lg-8 col-md-11"> {% endcomment %}
             <div class="d-flex">
               <div class="me-auto">
                 <div id="dateTime"></div>
@@ -249,25 +237,22 @@
                 <div class="card move-on-hover overflow-hidden">
                   <div class="card-body">
                     <div class="d-flex">
-                      <h6 class="mb-0 me-6">Tue</h6>
-                      <h6 class="mb-0">Tech Talk Show<br>
-                        <small class="text-secondary font-weight-normal">PFA</small>
+                      <h6 class="mb-0 me-4">Friday</h6>
+                      <h6 class="mb-0">Arcade & TradeFest<br>
+                        <small class="text-secondary font-weight-normal">Airplane Drive</small>
                       </h6>
                     </div>
                     <hr class="horizontal dark">
                     <div class="d-flex">
-                      <h6 class="mb-0 me-6">Wed</h6>
-                      <h6 class="mb-0">Skill Day<br />
+                      <h6 class="mb-0 me-5">Sat</h6>
+                      <h6 class="mb-0">Barbecue Hangout and<br>Paintball<br />
                         <small class="text-secondary font-weight-normal">Engineering Faculty</small>
                       </h6>
                     </div>
 
 
                   </div>
-                  <a href="trivia.html#seco" class="bg-gray-100 w-100 text-center py-1" data-bs-toggle="tooltip"
-                    data-bs-placement="top" title="Show More">
-                    <i class="fas fa-chevron-down text-primary"></i>
-                  </a>
+                 
                 </div>
               </div>
             </div>
@@ -358,14 +343,18 @@
   <script defer data-site="DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
 
   <style>
-    #video {
-      width: 20vw;
-      height: 20vh;
-    }
+    
 
     #scan-btn {
       margin-top: 10px;
     }
+
+    #video{
+      width:100%;
+      height:50%;
+    }
+
+   
   </style>
 </head>
 
@@ -373,11 +362,12 @@
   <div class="container h-100">
     <div class="row h-100">
       <div class="col-10 m-auto text-center">
+        <div id="video-container cont" class="video">
+          <video id="video" ></video>
+        </div>
         <h6>
           Click on the Login button to scan your card and access your block
-          <div id="video-container cont">
-            <video id="video"></video>
-          </div>
+          
 
 
 

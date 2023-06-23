@@ -6,7 +6,9 @@ appeard2.style.display = 'none';
 
 
 document.getElementById('scannedhash').style.display = 'none';
-document.getElementById('video').style.display = 'none' ;
+document.getElementById('BlockHsh-success').style.display = 'none';
+document.getElementById('BlockHsh-loading').style.display = 'none';
+document.getElementById('video').style.display = 'none';
 
 
 scanBtn.addEventListener('click', () => {
@@ -15,7 +17,7 @@ scanBtn.addEventListener('click', () => {
 
 function scanQRCode() {
 
-    document.getElementById('video').style.display = 'block' ;
+    document.getElementById('video').style.display = 'block';
     navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
         .then(function (stream) {
             video.srcObject = stream;
@@ -43,10 +45,11 @@ function startScanning() {
                 video.pause();
                 const qrCode = code.data;
                 document.getElementById('qr_code_input').value = qrCode;
-                    if(qrCode != ""){
-                        appeard1.style.display = 'none';
-                        appeard2.style.display = 'block'; 
-                    }
+                if (qrCode != "") {
+
+                    appeard1.style.display = 'none';
+                    appeard2.style.display = 'block';
+                }
                 const vidclose = document.getElementById('video');
                 // document.getElementById('login-form').submit();
                 vidclose.style.display = 'none';
